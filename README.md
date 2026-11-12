@@ -39,3 +39,11 @@ The SQLAlchemy mapping creates `road_segments` and `predictions`; `db_schema.sql
 - `GET /segments/{id}/predictions` — persisted forecast history.
 
 The included tests cover data generation/cleaning, feature engineering, risk scoring, and route registration. YOLO requires image data and suitable weights and is deliberately not fabricated or downloaded.
+
+## Preview images
+
+These illustrations show the intended dashboard and YOLO detection result layout. They are **not screenshots or actual model outputs**; the demo values are illustrative.
+
+![Illustrative road condition dashboard](docs/images/dashboard-preview.svg)
+
+![Illustrative YOLO damage detection](docs/images/damage-detection-preview.svg)
