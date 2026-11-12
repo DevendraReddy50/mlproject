@@ -1,0 +1,33 @@
+﻿services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: roads
+      POSTGRES_PASSWORD: roads
+      POSTGRES_DB: roads
+    ports: ["5432:5432"]
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U roads -d roads"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+  api:
+    build: .
+    command: sh -c "python -m road_platform.cli all && uvicorn road_platform.api:app --host 0.0.0.0 --port 8000"
+    environment:
+      DATABASE_URL: postgresql+psycopg://roads:roads@db:5432/roads
+    ports: ["8000:8000"]
+    depends_on:
+      db: {condition: service_healthy}
+  dashboard:
+    build: .
+    command: ["streamlit","run","src/road_platform/dashboard.py","--server.address=0.0.0.0","--server.port=8501"]
+    environment:
+      DATABASE_URL: postgresql+psycopg://roads:roads@db:5432/roads
+      API_URL: http://api:8000
+    ports: ["8501:8501"]
+    depends_on: [api]
+volumes:
+  pgdata:
+
